@@ -43,19 +43,6 @@ function Region.new()
 	return require(script:Clone())
 end
 
-function Region.new(BSP: BasePart)
-	Region.new(BSP, true)
-end
-
-function Region.new(BSP: BasePart, DestroyBSP: boolean) -- Creates region data based on BSP object data and destroys it given a passed argument
-	local required_class = require(script:Clone())
-	required_class.size = BSP.Size
-	required_class.cFrame = BSP.CFrame
-	if DestroyBSP == true then
-		BSP:Destroy()
-	end
-end
-
 function Region:CreateRegionFromBSP(BSP: BasePart, DestroyBSP: boolean) -- Creates region data based on BSP object data and destroys it given a passed argument
 	Region.size = BSP.Size
 	Region.cFrame = BSP.CFrame
