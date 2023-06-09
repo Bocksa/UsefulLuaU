@@ -1,16 +1,16 @@
 -- | Variables
 local Region = {
 	CheckPlayerEntry = false,
-	PlayerEnteredRegion = script.PlayerEnteredRegion,
-	PlayerExitedRegion = script.PlayerExitedRegion,
+	PlayerEnteredRegion = script.PlayerEnteredRegion, -- Bindable Event named PlayerEnteredRegion
+	PlayerExitedRegion = script.PlayerExitedRegion, -- Bindable Event named PlayerExitedRegion
 	size = Vector3.new(1,1,1),
-	cFrame = CFrame.new()
+	cFrame = nil
 }
 
 local PlayersInRegion = {}
 
 -- | Private Functions
-local function filterPartsInRegion(partsInRegion)
+local function filterPlayersInRegion(partsInRegion) -- Returns a table of all the players in a given region
 	local temp_table = {}
 	for _,v in pairs(partsInRegion) do
 		if game:GetService("Players"):GetPlayerFromCharacter(v.Parent) and not table.find(temp_table, game:GetService("Players"):GetPlayerFromCharacter(v.Parent)) then
@@ -20,7 +20,7 @@ local function filterPartsInRegion(partsInRegion)
 	return temp_table
 end
 
-local function checkPlayersAdded(filteredTable)
+local function checkPlayersAdded(filteredTable) -- Checks if a new player was added to a table of players
 	for _,v in pairs(PlayersInRegion) do
 		if not table.find(filteredTable, v) then
 			Region.PlayerExitedRegion:Fire(v)
@@ -29,7 +29,7 @@ local function checkPlayersAdded(filteredTable)
 	end
 end
 
-local function checkPlayersRemoved(filteredTable)
+local function checkPlayersRemoved(filteredTable) -- Checks if a player was removed from a table of players
 	for _,v in pairs(filteredTable) do
 		if not table.find(PlayersInRegion, v) then
 			Region.PlayerEnteredRegion:Fire(v)
@@ -43,7 +43,20 @@ function Region.new()
 	return require(script:Clone())
 end
 
-function Region:CreateRegionFromBSP(BSP: BasePart, DestroyBSP)
+function Region.new(BSP: BasePart)
+	Region.new(BSP, true)
+end
+
+function Region.new(BSP: BasePart, DestroyBSP: boolean) -- Creates region data based on BSP object data and destroys it given a passed argument
+	local required_class = require(script:Clone())
+	required_class.size = BSP.Size
+	required_class.cFrame = BSP.CFrame
+	if DestroyBSP == true then
+		BSP:Destroy()
+	end
+end
+
+function Region:CreateRegionFromBSP(BSP: BasePart, DestroyBSP: boolean) -- Creates region data based on BSP object data and destroys it given a passed argument
 	Region.size = BSP.Size
 	Region.cFrame = BSP.CFrame
 	if DestroyBSP or DestroyBSP == nil then
@@ -52,9 +65,9 @@ function Region:CreateRegionFromBSP(BSP: BasePart, DestroyBSP)
 end
 
 -- | Main
-game:GetService("RunService").Heartbeat:Connect(function()
+game:GetService("RunService").Heartbeat:Connect(function() -- Checks if a player has entered a region every tick
 	if Region.CheckPlayerEntry then
-		local filteredTable = filterPartsInRegion(workspace:GetPartBoundsInBox(Region.cFrame, Region.size))
+		local filteredTable = filterPlayersInRegion(workspace:GetPartBoundsInBox(Region.cFrame, Region.size))
 		if filteredTable ~= PlayersInRegion then
 			checkPlayersAdded(filteredTable)
 			checkPlayersRemoved(filteredTable)
