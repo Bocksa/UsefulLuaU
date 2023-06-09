@@ -1,13 +1,12 @@
 -- | Variables
 local Region = {
 	CheckPlayerEntry = false,
+	PlayersInRegion = {},
 	PlayerEnteredRegion = script.PlayerEnteredRegion, -- Bindable Event named PlayerEnteredRegion
 	PlayerExitedRegion = script.PlayerExitedRegion, -- Bindable Event named PlayerExitedRegion
 	size = Vector3.new(1,1,1),
 	cFrame = nil
 }
-
-local PlayersInRegion = {}
 
 -- | Private Functions
 local function filterPlayersInRegion(partsInRegion) -- Returns a table of all the players in a given region
@@ -21,19 +20,19 @@ local function filterPlayersInRegion(partsInRegion) -- Returns a table of all th
 end
 
 local function checkPlayersAdded(filteredTable) -- Checks if a new player was added to a table of players
-	for _,v in pairs(PlayersInRegion) do
+	for _,v in pairs(Region.PlayersInRegion) do
 		if not table.find(filteredTable, v) then
 			Region.PlayerExitedRegion:Fire(v)
-			table.remove(PlayersInRegion, table.find(PlayersInRegion, v))
+			table.remove(Region.PlayersInRegion, table.find(Region.PlayersInRegion, v))
 		end
 	end
 end
 
 local function checkPlayersRemoved(filteredTable) -- Checks if a player was removed from a table of players
 	for _,v in pairs(filteredTable) do
-		if not table.find(PlayersInRegion, v) then
+		if not table.find(Region.PlayersInRegion, v) then
 			Region.PlayerEnteredRegion:Fire(v)
-			table.insert(PlayersInRegion, v)
+			table.insert(Region.PlayersInRegion, v)
 		end
 	end
 end
@@ -55,7 +54,7 @@ end
 game:GetService("RunService").Heartbeat:Connect(function() -- Checks if a player has entered a region every tick
 	if Region.CheckPlayerEntry then
 		local filteredTable = filterPlayersInRegion(workspace:GetPartBoundsInBox(Region.cFrame, Region.size))
-		if filteredTable ~= PlayersInRegion then
+		if filteredTable ~= Region.PlayersInRegion then
 			checkPlayersAdded(filteredTable)
 			checkPlayersRemoved(filteredTable)
 		end
