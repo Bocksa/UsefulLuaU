@@ -13,8 +13,8 @@ local Region = {
 -- // Private functions \\
 
 --- Returns a table of all the players in a given region
----@param partsInRegion any
-local function filterPlayersInRegion(partsInRegion)
+---@param partsInRegion table
+local function filterPlayersInRegion(partsInRegion: table)
 	local tempTable = {};
 
 	for _,v in pairs(partsInRegion) do
@@ -27,8 +27,8 @@ local function filterPlayersInRegion(partsInRegion)
 end
 
 --- Checks if the new player was added to the table of players
---- @param filteredTable any
-local function checkPlayersAdded(filteredTable)
+--- @param filteredTable table
+local function checkPlayersAdded(filteredTable: table)
 	for _,v in pairs(Region.PlayersInRegion) do
 		if not table.find(filteredTable, v) then
 			Region.PlayerExitedRegion:Fire(v);
@@ -38,8 +38,8 @@ local function checkPlayersAdded(filteredTable)
 end
 
 --- Checks if a player was removed from a table of players
---- @param filteredTable any
-local function checkPlayersRemoved(filteredTable)
+--- @param filteredTable table
+local function checkPlayersRemoved(filteredTable: table)
 	for _,v in pairs(filteredTable) do
 		if not table.find(Region.PlayersInRegion, v) then
 			Region.PlayerEnteredRegion:Fire(v);
@@ -49,9 +49,9 @@ local function checkPlayersRemoved(filteredTable)
 end
 
 --- Create a new BindableEvent object
----@param name any
+---@param name string
 ---@param parent any
-local function createEvent(name, parent)
+local function createEvent(name: string, parent)
 	local object = Instance.new("BindableEvent");
 	object.Name = name;
 	object.Parent = parent;
@@ -77,6 +77,7 @@ end
 
 --- Creates region data based on a BSP object
 ---@param BSP any
+---@param DestroyBSP boolean
 function Region:CreateRegionFromBSP(BSP: BasePart, DestroyBSP: boolean) -- 
 	Region.Size = BSP.Size;
 	Region.Transform = BSP.Transform;
