@@ -78,7 +78,7 @@ end
 --- Creates region data based on a BSP object
 ---@param BSP any
 ---@param DestroyBSP boolean
-function Region:CreateRegionFromBSP(BSP: BasePart, DestroyBSP: boolean) -- 
+function Region:CreateRegionFromBSP(BSP: BasePart, DestroyBSP: boolean) 
 	Region.Size = BSP.Size;
 	Region.Transform = BSP.Transform;
 
