@@ -73,6 +73,11 @@ function Region.new()
 	return require(clone);
 end
 
+-- // Class destructor \\
+function Region:Destroy()
+	script:Destroy();
+end
+
 -- // Public functions \\
 
 --- Creates region data based on a BSP object
