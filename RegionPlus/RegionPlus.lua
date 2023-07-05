@@ -28,7 +28,7 @@ end
 
 --- Checks if the new player was added to the table of players
 --- @param filteredTable table
-local function checkPlayersAdded(filteredTable: table)
+local function checkPlayersAdded(filteredTable)
 	for _,v in pairs(Region.PlayersInRegion) do
 		if not table.find(filteredTable, v) then
 			Region.PlayerExitedRegion:Fire(v);
@@ -39,7 +39,7 @@ end
 
 --- Checks if a player was removed from a table of players
 --- @param filteredTable table
-local function checkPlayersRemoved(filteredTable: table)
+local function checkPlayersRemoved(filteredTable)
 	for _,v in pairs(filteredTable) do
 		if not table.find(Region.PlayersInRegion, v) then
 			Region.PlayerEnteredRegion:Fire(v);
@@ -85,7 +85,7 @@ end
 ---@param DestroyBSP boolean
 function Region:CreateRegionFromBSP(BSP: BasePart, DestroyBSP: boolean) 
 	Region.Size = BSP.Size;
-	Region.Transform = BSP.Transform;
+	Region.Transform = BSP.CFrame;
 
 	if DestroyBSP or DestroyBSP == nil then
 		BSP:Destroy();
