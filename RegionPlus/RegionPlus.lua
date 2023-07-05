@@ -14,7 +14,7 @@ local Region = {
 
 --- Returns a table of all the players in a given region
 ---@param partsInRegion table
-local function filterPlayersInRegion(partsInRegion: table)
+local function filterPlayersInRegion(partsInRegion)
 	local tempTable = {};
 
 	for _,v in pairs(partsInRegion) do
