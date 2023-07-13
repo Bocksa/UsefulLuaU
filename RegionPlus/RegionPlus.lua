@@ -57,6 +57,20 @@ local function createEvent(name: string, parent)
 	object.Parent = parent;
 end
 
+-- // Public functions \\
+
+--- Creates region data based on a BSP object
+---@param BSP any
+---@param DestroyBSP boolean
+function Region:CreateRegionFromBSP(BSP: BasePart, DestroyBSP: boolean) 
+	Region.Size = BSP.Size;
+	Region.Transform = BSP.CFrame;
+
+	if DestroyBSP or DestroyBSP == nil then
+		BSP:Destroy();
+	end
+end
+
 -- // Class constructor \\
 function Region.new()
 	local clone = script:Clone();
@@ -76,20 +90,6 @@ end
 -- // Class destructor \\
 function Region:Destroy()
 	script:Destroy();
-end
-
--- // Public functions \\
-
---- Creates region data based on a BSP object
----@param BSP any
----@param DestroyBSP boolean
-function Region:CreateRegionFromBSP(BSP: BasePart, DestroyBSP: boolean) 
-	Region.Size = BSP.Size;
-	Region.Transform = BSP.CFrame;
-
-	if DestroyBSP or DestroyBSP == nil then
-		BSP:Destroy();
-	end
 end
 
 -- // Frame tick \\
